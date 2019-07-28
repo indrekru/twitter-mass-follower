@@ -146,47 +146,7 @@ public class FollowService {
 
     private void doFollows() throws Exception {
 
-        List<String> accounts = new ArrayList<String>(){{
-            add("airbnb");
-            add("santanderuk");
-            add("HSBC");
-            add("AskLloydsBank");
-            add("WesternUnion");
-            add("BarackObama");
-            add("TheEllenShow");
-            add("realDonaldTrump");
-            add("BillGates");
-            add("elonmusk");
-            add("nytimes");
-            add("NASA");
-            add("ReformedBroker");
-            add("TheStalwart");
-            add("ritholtz");
-            add("StockCats");
-            add("awealthofcs");
-            add("John_Hempton");
-            add("BarbarianCap");
-            add("muddywatersre");
-            add("Carl_C_Icahn");
-            add("herbgreenberg");
-            add("zerohedge");
-            add("pmarca");
-            add("WarrenBuffett");
-            add("LendingClub");
-            add("Zopa");
-            add("RobinhoodApp");
-            add("RevolutApp");
-            add("monzo");
-            add("imaginecurve");
-            add("starlingbank");
-            add("freetrade");
-            add("IBKR");
-            add("degiroeu");
-            add("GrantCardone");
-            add("theRealKiyosaki");
-            add("Citibank");
-            add("jpmorgan");
-        }};
+        List<String> accounts = configParams.getAccountsToFollow();
 
         Random random = new Random();
         String account = accounts.get(random.nextInt(accounts.size()));

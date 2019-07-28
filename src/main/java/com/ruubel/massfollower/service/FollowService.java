@@ -58,8 +58,6 @@ public class FollowService {
         long[] followers = getImFollowingAndMyFollowers();
         long imFollowing = followers[0];
         long myFollowers = followers[1];
-        log.info("I'm following: " + imFollowing);
-        log.info("Following me: " + myFollowers);
 
         if (followers[0] >= 3500) {
             // Do unfollows
@@ -72,6 +70,11 @@ public class FollowService {
             log.info("Do follows first");
             doFollows();
         }
+
+        // Update followers
+        followers = getImFollowingAndMyFollowers();
+        imFollowing = followers[0];
+        myFollowers = followers[1];
 
         if (imFollowing == 0) {
             log.info("Account blocked with recaptcha, notify");

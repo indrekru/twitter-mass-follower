@@ -232,6 +232,20 @@ public class FollowService {
             long id = user.getLong("id");
             String name = user.getString("name");
             String screenName = user.getString("screen_name");
+            Boolean following = user.getBoolean("following");
+
+            // Check if already following
+            if (following != null && following) {
+                log.info(String.format("Already followed '%s', skip", screenName));
+                continue;
+            }
+
+            // Validate if real user
+            String description = user.getString("description");
+            if (description == null || description.trim().isEmpty()) {
+                log.info(String.format("Skip '%s', probably a bot", screenName));
+                continue;
+            }
 
             Followed followed = followedRepository.findByExternalId(String.valueOf(id));
             if (followed != null) {

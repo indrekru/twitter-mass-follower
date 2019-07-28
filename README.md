@@ -32,6 +32,7 @@ These instructions will get you a copy of the project up and running on your loc
    TWITTER_BEARER_TOKEN
    TWITTER_CSRF_TOKEN
    TWITTER_AUTH_TOKEN
+   TWITTER_TARGET_ACCOUNTS
    ```
    
    #### Where to find these values
@@ -58,6 +59,8 @@ These instructions will get you a copy of the project up and running on your loc
        ```
        auth_token=whatever;
        ```
+   * `TWITTER_TARGET_ACCOUNTS` - Comma separated twitter account names, which to choose from randomly on every iteration
+   
     #### If you run it with Postgres, you'll also need these environment variables:
 
     ```

@@ -28,9 +28,10 @@ These instructions will get you a copy of the project up and running on your loc
 2. You need to define environment variables:
    ```
    TWITTER_HOME_ACCOUNT_NAME
+   TWITTER_HOME_ACCOUNT_ID
    TWITTER_BEARER_TOKEN
    TWITTER_CSRF_TOKEN
-   TWITTER_COOKIE
+   TWITTER_AUTH_TOKEN
    ```
    
    #### Where to find these values

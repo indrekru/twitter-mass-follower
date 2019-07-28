@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -102,6 +104,14 @@ public class FollowService {
 
             long id = user.getLong("id");
             String name = user.getString("name");
+            String screenName = user.getString("screen_name");
+
+            Followed followed = followedRepository.findByExternalId(String.valueOf(id));
+            boolean shouldUnfollow = shouldUnfollow(followed);
+            if (!shouldUnfollow) {
+                log.info(String.format("Shouldn't unfollow '%s' yet", screenName));
+                continue;
+            }
 
             String cookie = String.format("auth_token=%s; ct0=%s;", configParams.getAuthToken(), configParams.getCsrfToken());
 
@@ -290,6 +300,23 @@ public class FollowService {
         followers[1] = myFollowers;
 
         return followers;
+    }
+
+    private boolean shouldUnfollow(Followed followed) {
+        if (followed != null) {
+            Instant followedDate = followed.getFollowed();
+            Instant now = Instant.now();
+            Duration duration = Duration.between(followedDate, now);
+            if (Math.abs(duration.toHours()) >= 48) {
+                log.info("Have followed at least 2 days, remove");
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            // Nothing in DB, so remove it
+            return true;
+        }
     }
 
 }

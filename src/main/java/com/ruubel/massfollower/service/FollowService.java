@@ -232,10 +232,11 @@ public class FollowService {
             long id = user.getLong("id");
             String name = user.getString("name");
             String screenName = user.getString("screen_name");
-            Boolean following = Boolean.valueOf(user.getString("following"));
+            Object followingObj = user.get("following");
+            Boolean following = (JSONObject.NULL.equals(followingObj) ? false : (Boolean) followingObj);
 
             // Check if already following
-            if (following != null && following) {
+            if (following) {
                 log.info(String.format("Already followed '%s', skip", screenName));
                 continue;
             }

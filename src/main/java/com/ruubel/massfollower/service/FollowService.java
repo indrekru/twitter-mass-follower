@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -33,6 +32,8 @@ public class FollowService {
 
     private double waitBetweenFollowsSeconds = 1;
     private double waitBetweenUnfollowsSeconds = 0.1;
+    private String TWITTER_API_URL = "https://api.twitter.com/1.1";
+    private String X_CSRF_TOKEN_HEADER = "x-csrf-token";
 
     private int followerCount = 200;
 
@@ -87,7 +88,7 @@ public class FollowService {
     private void doUnfollows() throws Exception {
 
         HttpResponse response = Request.Get(
-                String.format("https://api.twitter.com/1.1/friends/list.json?user_id=%s&count=%s", configParams.getHomeAccountId(), followerCount))
+                String.format("%s/friends/list.json?user_id=%s&count=%s", TWITTER_API_URL, configParams.getHomeAccountId(), followerCount))
                 .addHeader(HttpHeaders.AUTHORIZATION, configParams.getAuthorizationBearerToken())
                 .execute()
                 .returnResponse();
@@ -118,9 +119,9 @@ public class FollowService {
 
             String cookie = String.format("auth_token=%s; ct0=%s;", configParams.getAuthToken(), configParams.getCsrfToken());
 
-            response = Request.Post("https://api.twitter.com/1.1/friendships/destroy.json")
+            response = Request.Post(TWITTER_API_URL + "/friendships/destroy.json")
                 .addHeader(HttpHeaders.AUTHORIZATION, configParams.getAuthorizationBearerToken())
-                .addHeader("x-csrf-token", configParams.getCsrfToken())
+                .addHeader(X_CSRF_TOKEN_HEADER, configParams.getCsrfToken())
                 .addHeader("cookie", cookie)
                 .bodyForm(
                     Form.form()
@@ -153,7 +154,7 @@ public class FollowService {
         log.info(String.format("Start following '%s'", account));
 
         HttpResponse response = Request.Get(
-                String.format("https://api.twitter.com/1.1/users/show.json?screen_name=%s", account))
+                String.format("%s/users/show.json?screen_name=%s", TWITTER_API_URL, account))
                 .addHeader(HttpHeaders.AUTHORIZATION, configParams.getAuthorizationBearerToken())
                 .execute()
                 .returnResponse();
@@ -168,7 +169,7 @@ public class FollowService {
         long userId = json.getLong("id");
 
         response = Request.Get(
-                String.format("https://api.twitter.com/1.1/followers/list.json?cursor=-1&user_id=%s&count=%s", userId, followerCount))
+                String.format("%s/followers/list.json?cursor=-1&user_id=%s&count=%s", TWITTER_API_URL, userId, followerCount))
                 .addHeader(HttpHeaders.AUTHORIZATION, configParams.getAuthorizationBearerToken())
                 .execute()
                 .returnResponse();
@@ -214,9 +215,9 @@ public class FollowService {
                 continue;
             }
 
-            response = Request.Post("https://api.twitter.com/1.1/friendships/create.json")
+            response = Request.Post(TWITTER_API_URL + "/friendships/create.json")
                 .addHeader(HttpHeaders.AUTHORIZATION, configParams.getAuthorizationBearerToken())
-                .addHeader("x-csrf-token", configParams.getCsrfToken())
+                .addHeader(X_CSRF_TOKEN_HEADER, configParams.getCsrfToken())
                 .addHeader("cookie", cookie)
                 .bodyForm(
                     Form.form()

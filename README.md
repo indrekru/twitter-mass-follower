@@ -3,12 +3,13 @@
 
 <img src="https://raw.githubusercontent.com/indrekru/twitter-mass-follower/master/img.png" width="200px">
 
-This is a server-side twitter mass-follower + unfollower. It uses a scheduler and runs once every 24 hours, it runs as long as Twitter restrictions (rate limiting) for the day kick in, so it'll wait a day and do it again.
-It will decide either to follow or unfollow a bunch of people, depending how many you are currently following. It unfollows people that have been followed for at least 2 days. It always needs to keep your current following number under 5000, otherwise - Twitter restrictions kick in.
-If this thing runs on a scheduler every day, ideally your follower amount should grow.
+This is a server-side twitter mass-follower + unfollower. It uses a scheduler and runs every 10 minutes, it runs as long as Twitter restrictions (rate limiting) kick in, so it'll wait and do it again.
+It will decide either to follow or unfollow a bunch of people, depending how many you are currently following. It unfollows people that have been followed for at least 2 days. It always needs to keep your current following number under 5000, otherwise - "Special" twitter restrictions kick in.
+If this thing runs on a scheduler every day, your follower amount will grow (Check the graph at https://mass-follower.netlify.com/).
 
 It keeps track of followed/unfollowed users in Postgres or HSQLDB local file storage database (depends what profile you run it with, default is postgres). In case of HSQLDB, run it with `-Dspring.profiles.active=hsql` and make sure the app can create a directory named `db` in the root directory and create/modify files inside it.
 Also runs a cleanup job every day to remove older entries to keep followed table's DB row count below 8500, because heroku has 10000 DB row limit on free plan.
+Also, twitter triggers a picture recaptcha from time to time (every ~2 days), when that is detected, it will send an email to notify the owner to go and manually solve the recaptcha, and everything continues.
 
 Interface to show progress: https://mass-follower.netlify.com/
 
